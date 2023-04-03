@@ -4,11 +4,21 @@ Este repositorio contiene las prácticas realizadas en la materia **Programació
 
 ## Prácticas
 
-- [Practica 1 estructuras](Practica%201%20estructuras/): Introducción al lenguaje - Conceptos básicos de herencia
+- [Practica 1 estructuras](Practica%201%20estructuras/)
 
-- [Práctica 3](practica3/): Listas enlazadas
+- [Practica 2 nros y caracts](Practica%202%20nros%20y%20caracts/)
 
-Cada práctica incluye su correspondiente archivo de código fuente y un archivo README que explica los objetivos y los pasos seguidos para completar la práctica.
+- [Practica 3 modulos](Practica%203%20modulos/)
+
+- [Practica 4 types](Practica%204%20types/)
+
+- [Practica 5 cort d cntrl](Practica%205%20cort%20d%20cntrl/)
+
+- [Practica 7 arrays](Practica%207%20arrays/)
+
+- [Practica 10 listas](Practica%2010%20listas/)
+
+- [Practica 11 repaso](Practica%2011%20repaso/)
 
 ## Licencia
 

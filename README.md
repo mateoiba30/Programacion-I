@@ -4,7 +4,7 @@ Este repositorio contiene las prácticas realizadas en la materia **Programació
 
 ## Prácticas
 
-- [ejercicios a entregar](./ejercicios a entregar/): Introducción al lenguaje - Conceptos básicos de herencia
+- [Practica 1 estructuras](Practica%201%20estructuras/): Introducción al lenguaje - Conceptos básicos de herencia
 
 - [Práctica 3](practica3/): Listas enlazadas
 

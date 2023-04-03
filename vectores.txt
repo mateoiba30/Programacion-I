@@ -1,0 +1,272 @@
+Procedure AgregarAlFinal(var v: vector; var dimL: integer; elemento: integer; var exito: boolean);
+Begin
+  exito:= false;
+  {verificar espacio suficiente}
+  If (dimL < dimF) then begin
+    exito:= true;
+    dimL:= dimL+1; {actualizar cantidad de elementos}
+    v [dimL]:= elemento; //dimL es el ultimo valor
+  end;
+end;
+
+procedure CargarVector (var a: numeros; var dimlog: integer);
+var 
+  num: integer;
+Begin
+  dimlog:=0;
+  read(num);
+  while (num <> 999) and (dimlog < 1500) do begin
+    dimlog:= dimlog + 1;
+    a[dimlog] := num;
+    read(num); //vuelo a preguntar para ver si vuelvo a entrar al bucle
+  end;
+end;
+
+
+Function BuscarPosSinOrden (x:integer; v:vector; dimL: Indice): Indice;
+var
+  pos:Indice; exito: boolean;
+Begin
+  pos:=1;
+  exito:= false;
+  while (pos <= dimL) and (not exito) do //avanzo mientras no encuentre
+     if (x = v[pos]) then 
+       exito:= true;
+     else 
+       pos:=pos+1;
+  if (exito = false) then
+    pos:=0; //asigno cero porque es el valor que no representa ninguna posición en el vector
+  BuscarPos:= pos;
+end;
+
+
+function Buscar2(v:vector;DimL:integer;nombre:str):integer;
+var
+  i,pos:integer;
+  exito:boolean;
+begin
+  exito:=False;                            {otra manera de hacerlo?: if(v[i]=nombre)then exito:=true; else pos:=pos+1; if(exito=False) then pos:=0;}
+  i:=1;
+  pos:=0;
+  while(i<=DimL)and(not exito)do begin//este no sería por orden, pero es fácil de modificar
+    if(v[i]=nombre)then begin
+      exito:=True;
+      pos:=i;
+    end;
+    i:=i+1;
+  end;
+  aBuscar:=pos;
+end;
+
+
+Function BuscoPosElemOrd (x: integer; v:Vector; dimL: Indice): Indice;
+var 
+  pos : Indice;
+begin
+  pos:=1;
+  while (pos <= dimL) and (x > v[pos]) do //avanzo mientras sepa según el orden que puede existir
+    pos:=pos+1;
+  if ( pos > dimL ) or (x < v [pos]) then 
+    pos:=0; //un valor de celda que no exista dentro del vector
+  BuscoPosElemOrd:= pos; //pos queda con el valor a buscar si es que encontró
+end; 
+
+procedure BuscoElemOrd-dicotomico (var v:vector; var j:indice; dimL:indice; x:tipoElemen);//vector por referencia para ahorrar memoria
+var
+  pri,ult,medio:indice; //voy dividiendo por 2 los numeros, achicando ek intervalo
+begin
+  j:=0;//representa la posicion a buscar
+  pri:=1;//valor inical para una posición vectorial
+  ult:=dimL;
+  medio:=(pri+ult)DIV 2;//si da con coma se redondea
+
+  while(pri<=ult)and(x<>v[medio])do begin//cuando lo encuentre pri<=ult=medio=x; pri=ult=medio si x=ult
+    if(x<v[medio])then
+      ult:=medio-1;
+    else
+      pri:=medio+1;
+    medio:=(pri+ult)DIV 2;//actualizo el medio
+  end;
+  if(pri<=ult)then
+    j:=medio;
+  else
+    j:=0;
+end;
+
+
+Procedure BorrarElem (var v: vector; var dimL: indice; elem : integer; var exito: boolean);
+  
+  Procedure BorrarPosModif (var v:vector; var dimL:integer; pos:Indice);//ya se que la posicion es valida, entonces el codigo me queda mas corto
+  var
+    i: integer;
+  begin
+    for i:= pos + 1 to dimL do
+      v [ i - 1 ] := v [ i] ;
+    dimL := dimL - 1 ;
+  end;
+
+var
+  pos: indice;
+begin
+  exito:= false;
+  pos:= BuscarPosElem (elem, v, dimL);
+  if pos <> 0 then begin //si la posicion existe
+    BorrarPosModif (v, dimL, pos);
+    exito:= true;
+  end;
+end;
+
+
+Procedure BorrarPos (var v: vector; var dimL: integer; pos: posicion;
+ var exito: boolean );
+var 
+  i: integer;
+begin
+ exito := false;
+ if (pos >=1 and pos <= dimL)then begin
+   exito := true;
+   for i:= pos + 1 to dimL do
+     v [ i - 1 ] := v [ i ] ;
+   dimL := dimL - 1 ;
+  end;
+end;
+
+
+procedure BorrarIntervalo(var v:vector; var DimL:integer; i,j:integer); //i:inicio intervale y j:fin
+var
+  x,k:integer;
+begin
+  x:=j-i+1; //x es el intervalo a desplazarme (le sumo 1 porque si el intervalo va de 1 a 1 --> 1-1+1=1 y 1 es lo que me tengo que desplazar
+  for k:=i to j do //repito tantas veces como elemntos a borrar
+    if(k+x<=DimF)then //si existe la posicion a la que quiero desplazar los datos
+      v[k]:=v[k+x];//desplazo los elemntos el largo del intervalo +1 
+  DimL:=DimL-x;
+end;
+
+
+Procedure InsertarEnUnaPosicion(var v:vector; var dimL: integer; elemento: integer; pos: integer; var exito: boolean);
+var
+  i : integer;
+Begin
+  exito:= false;
+  if (dimL < dimF) and ((pos>=1) and (pos<= dimL))then begin //si hay lugar y la posicion existe
+    exito:= true;
+    for i:= dimL downto pos do  //desde el ultimo hacia el de la posicion (sino le pondría a todos el mismo valor)
+      v [ i + 1 ] := v [ i ] ; //escribo el dato en el siguiente
+    v [pos] := elemento;//asigno el valor
+    dimL := dimL + 1; //no olvidar de aumentar la dimension lógica
+  end;
+end;
+
+
+
+procedure InsertarEnVectorOrdenado(var v:vector; n:integer; var DimL:indice);
+var
+  i,j:integer;
+begin
+  if(DimL<DimF) then begin
+
+    i:=1;
+    DimL:=DimL+1;  //NO OLVIDAR DE HACERLO AHORA porque hago v[j]:=v[j-1];
+    while(i<DimL)and(v[i]>n)do //lo mismo que si fuera while(i<=DimL)and(v[i]>n)do
+      i:=i+1;
+    if(i=DimL)and(v[i]<n)then begin
+      v[i]:=n;
+    end
+    else begin
+      if(i<DimL)then begin
+        for j:=DimL downto i do
+          v[j]:=v[j-1];
+        v[i]:=n;
+      end;
+    end;
+
+  end;
+end;
+
+
+procedure InsertarEnVectorOrdenado2(var v:vector; n:integer; var DimL:indice);
+var
+  i,j:integer;
+begin
+  if(DimL<DimF) then begin
+
+    i:=1;
+    DimL:=DimL+1;//NO OLVIDAR DE HACERLO AHORA porque hago v[j]:=v[j-1];
+    while(i<DimL)and(v[i]>n)do // NO ES!!! lo mismo que si fuera while(i<=DimL)and(v[i]>n)do
+      i:=i+1;
+
+    if(v[i]<n)then begin//si evauaría con if(i<DimL) podría ponre while i<=DimL
+      for j:=DimL downto i do
+        v[j]:=v[j-1];
+      v[i]:=n;
+    end;
+  end;
+end; 
+
+
+Procedure InsertarElemOrd3 (var v: vector; var dimL: indice; elem : TipoElem; var exito: boolean);
+ 
+  Function DeterminarPosicion ( x: integer; v:Vector; dimL: Indice): Indice;
+  var 
+    pos : Indice;
+  begin
+    pos:=1;
+    while (pos<=dimL) and (x > v[pos]) do
+      pos:=pos+1;
+    DeterminarPosicion:= pos;
+  end;
+
+  Procedure Insertar (var v:vector; var dimL:Indice; pos: Indice; elem:integer);
+  var
+    j: indice;
+  begin
+    for j:= dimL downto pos do
+      v [ j +1 ] := v [ j ] ;
+    v [ pos ] := elem;
+    dimL := dimL + 1;//no hacerlo antes porque hago v[j+1]:=v[j];
+  End;
+
+var 
+  pos: indice;
+Begin
+  exito := false;
+  if (dimL < dimF) then begin
+    pos:= DeterminarPosicion (elem, v, dimL);
+    Insertar (v, dimL, pos, elem);
+    exito := true;
+  end;
+end;
+
+
+procedure InsertarIntervalo(var vA:vector; vB:vector; var DimLA:integer; pos,DimLB:integer);
+var
+  i:integer;
+begin
+  if(DimLA+DimLB<=DimFA)and(l<=DimLA)then begin //verificar que el vector B entre en A
+    for i:=DimLA downto pos do//muevo los valores
+      vA[i+DimLB]:=vA[i];//desplazo el ancho del vector nuevo
+    for i:=1 to DimLB do
+      vA[i+DimLB]:=vB[i]; //cargo los nuevos valores
+    DimLA:=DimLA+DimLB; //no hacerlo antes porque hago v[j+1]:=v[j];
+  end;
+end;
+
+
+procedure OrdenarVectorMetodoSeleccion (var v:tVector; dimLog:indice);//cada valor dentro de cada posicion del vector analiza quien es su menor a la derecha e intercambian posiciones
+var
+  i,j,p:indice;
+  item:tipo;
+begin
+  for 1 to dimLog-1 do begin //el ultimo no tiene a donde moverse
+    p:=i;
+    for j:=i+1 to dimLog do //analizo los valores de la derecha de pos (el elemento actual)
+      if(v[j]<v[p]) then //si el elemento de la derecha es menor entonces guardo el menor (al final me queda el menor de todos los de la derecha)
+        p:=j;
+    item:=v[p];
+    v[p]:=v[i]; //intercambio valores con ayuda del auxiliar
+    v[i]:=item;
+  end;
+end;
+
+     

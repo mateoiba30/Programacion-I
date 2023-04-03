@@ -1,0 +1,116 @@
+procedure CargarMatriz(var M:matriz; var DimFila:rangoF; var DimCol:reangoC);
+var
+  i:rangoF;
+  j:rangoC;
+begin
+  writeln('Ingrese cantidad de filas:');
+  readln(DimFila);
+  writeln('Ingrese cantidad de columnas:');
+  readln(DimCol);
+
+  if(validar(DimFila,DimCol))then
+    for i:=1 to DimFila do //carga por fila
+      for j:=1 to DimCol do
+        readln(M[i,j]);
+end;
+
+procedure BuscarEnMatrizSinOrd( var M: matriz; DimFila: rangoF; DimCol: rangoC; elemen:integer);
+var
+  i,j:integer;  //podría usar posF y posC
+  posF:rangoF;
+  posC:rangoC;  
+  encontre:boolean;
+begin
+  encontre:=False;
+  i:=1;
+  while(i<=DimFila)and(not encontre)do begin  //avanzo por fila hasta encontrar
+    j:=1;
+    while(j<=DimCol)and(not encontre)do
+      if(M[i,j]=elemen)then begin
+        encontre:=True;
+      end
+      else begin
+        j:=j+1;
+      end;
+    if(not encontre)then //solo avanzo si no encontre para poder usar la posicion correcta
+      i:=i+1;
+  end;
+  if(encontre)then begin
+    posC:=j;
+    posF:=i;
+  end
+  else begin
+    posC:=0;
+    posF:=0; //valen cero porque es un numero que no indica ninguna posicion dentro del vector
+  end;
+end;     
+
+
+Procedure EliminarFila ( var M: matriz; var DimFila: rangoF; DimCol: rangoC; fila: rangoF; var exito:boolean);
+var 
+  k: rangoC; f :rangoF;
+begin
+  If ( fila >0 and fila < DimFila )then begin// verifica que el índice es válido, para efectuar la operación
+    exito := true;
+    For f := fila to DimFila-1 do// resto 1 porque tomo el valor de la fila de la derecha y lo copio, la última fila me queda repetida y disminuyo la diml
+      For k := 1 to DimCol do
+        M [f, k] := M [f+1, k];
+    DimFila := DimFila - 1;
+  end
+  else 
+    If fila = DimFila then begin
+      DimFila := DimFila – 1;
+      exito := true;
+    end
+    else 
+      exito := false;
+    end;
+  end;
+end;
+
+
+procedure InsertarFila(var M:matriz; var DimFila:rangoF; DimCol:rangoC; v:vector; dimL:rangoC {del vector}; posF:rangoF; var exito:boolean);
+var
+  i,j:integer;
+begin
+  exito:=False;
+  if(DimFila<maxfil)and(posF>=1)and(posF<=DimFila)and(dimL=dimCol)then begin
+    exito:=True;
+    for i:=dimFila downto posF do
+      for j:=1 to DimCol do
+        M[i+1,j]:=M[i,J];//toda la fila se copia en la siguiente
+     
+    for j:=1 to DimL{=DimCol} do
+      M[posF,j]:=v[j]; //cargo la nueva fila
+    DimFila:=DimFila+1;
+  end;
+end;
+
+
+procedure Rotar90gradosImagen (img1:ImagenRGB; var img2:ImagenRGB);
+var
+  k,i,j:integer;
+begin
+  img2.ancho:=img1.alto;
+  img2.alto:=img1.ancho;
+  k:=0;
+  for i:=img2.ancho downto 1 do begin
+    k:=k+1;
+    for j:=1 to img2.alto do begin
+      img2.datos[j,i].r:=img1.datos[k,j];
+      img2.datos[j,i].g:=img1.datos[k,j];
+      img2.datos[j,i].b:=img1.datos[k,j];
+    end;
+  end;
+end;
+
+
+
+
+
+
+
+
+
+
+

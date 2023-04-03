@@ -1,0 +1,8 @@
+*.zip
+*.pdf
+*.exe
+*.lpi
+*.lps
+*.lpr
+*.o
+*.compiled

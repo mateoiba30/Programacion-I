@@ -1,0 +1,364 @@
+Procedure Imprimir( pri : lista);
+Begin
+  while (pri <> NIL) do begin
+    write (pri^.datos.nom,pri^.datos.edad) ;
+    pri:= pri^.sig//no olvidar de avanzar
+  end;
+end;
+
+procedure CargarLista(var l:lista);//solo pido la lista
+
+  procedure Cargar1E(var inscripto:reginscripto);//siemrpe hacer el submodulo de cargar q elemnto
+  begin
+    with inscripto do begin
+      readln(apellido);
+      if(apellido<>fin)then begin //un if, y en el cargar principal un while
+        readln(nombre);
+        readln(numero);
+      end;
+    end;
+  end;
+
+var
+  inscripto:reginscripto;//creo un nuevo registro
+begin
+  Cargar1E(inscripto);//cargo el registro
+  while(inscripto.apellido<>fin)do begin
+    AgregarAdelante(l,inscripto);//creo nuevo nodo con el registro y un puntero del tipo lista
+    Cargar1E(inscripto);//no olvidar
+//notar que no devo avanza en l nunca
+  end;
+end;
+
+procedure LiberarLista1(var l:lista);
+var
+  aux:lista;//viene a ser el valor anterior que borro
+begin
+  while(l<>nil)do begin
+    aux:=l;
+    l:=l^.sig;
+    dispose(aux);
+  end;
+end; 
+
+
+procedure LiberarLista2 (var l:lista);
+var
+  aux:lista;//viene a ser el siguiente y borro el actual
+begin
+  while(l<>nil)do begin
+    aux:=l^.sig;
+    dispose(l);
+    l:=aux;
+  end;
+end;   
+
+
+function buscarSinOrd (pri: lista; x:cadena50):boolean;
+Var
+  encontre : boolean;
+begin
+  encontre := false;//si no lo declaro acá lo hago en el programa principal
+  while (pri <> NIL) and (not encontre) do
+    if x = pri^.datos.nom then begin//como no hay orden no puedo preguntar si es mayor o menor
+      encontre:= true;
+    end
+    else begin
+      pri:= pri^.sig;
+    end;
+  buscar := encontre
+end;
+
+
+crear lista vacía
+Begin
+...... L:=nil; .....//no hace falta ningun new(); los new son para crear nodos y al inicio solo hay un puntero en ME
+End.
+
+
+Procedure AgregarAdelante (var L:lista; per:persona);//los agregar elemntos crean nodos, usan el new()
+Var 
+  nue:Lista;//creo un puntero que apunta a un nuevo nodo 
+Begin 
+  New(nue);//creo espacio para lo que apunta el pun tero (un nodo) 
+  nue^.datos:=per; 
+  nue^.sig:=L; 
+  L:=nue; //no olvidar
+End;
+
+
+procedure AgregarAlFinal (var pri: lista; per: persona);//es var por si justo agrego adelante
+var
+  act, nue : lista;
+begin
+  new (nue);
+  nue^.datos:= per;
+  nue^.sig := NIL;//porque va al final
+  if pri <> Nil then begin //si la lista no estaba vacía
+    act := pri ;
+    while (act^.sig <> NIL ) do //me quiero quedar parado en el ultimo elemento antes del nil
+      act := act^.sig ;
+    act^.sig := nue ;//podría sino hacer: while(act<>nil)do act:=act^.sig; act:=nue;
+  end
+  else begin
+    pri:= nue;//si estaba vacía la lista solo modifco el puntero inicial
+  end;
+end;
+
+
+procedure AgregarAlFinal2 (var pri, ult: lista; per: persona);//es var por si justo agrego adelante
+var   //ult va por referencia porq cambio lo q va al final
+  nue : lista;//no declaro actual poruqe uso a ult
+begin
+  new (nue);
+  nue^.datos:= per;
+  nue^.sig := NIL;
+  if pri <> Nil then begin
+    ult^.sig := nue;//ya conosco el último, no necesito buscarlo mediante un while
+  end
+  else begin
+    pri := nue;
+  end;
+  ult := nue;//no olvidar de actualizar el último
+end;  
+
+
+Procedure BorrarElemento (var pri:lista; nom:cadena50; var exito: boolean);
+var
+  ant, act: lista;
+begin
+  exito := false;
+  act := pri;
+  
+  while (act <> NIL) and (act^.datos.nom <> nom) do begin//Recorro mientras no se termine la lista y no encuentre el elemento
+    ant := act;
+    act := act^.sig
+  end;
+  if (act <> NIL) then begin//si encontre, sino es que la lista no lo tiene (puede estar o no vacía)
+    exito := true;
+    if (act = pri) then begin//el elemnto es el primero. como no hice if ac=ant, no necestio inicalizar a ant
+      pri := act^.sig;
+    end
+    else begin //el elemnto no es el primero, ant en algun momento obtuvo el valor de act al avanzar, por eso no es necesario hacer ant:=pri;
+      ant^.sig:= act^.sig;
+    end;
+    dispose (act);//no olvidar
+  end;
+end;
+
+
+procedure EliminarEmpleadosSinOrd(var l:lista);//si fuera por orden alk encontrar la condicion conecto el anterior hasta el primero que no cumpla la condicion
+var
+  aux,ant,act:lista;
+  borre:boolean;//no lo paso por referencia porque indica verdadero cada vez qeu borro un elemnto y luego se vuelve a inicializar
+begin
+  act:=l;
+  while(act<>nil)do begin //como quiero eliminar a todos los que cumplan la condicion recorro entera a la lista
+    borre:=false;
+    aux:=act;
+    if(act^.empleado.dep=dep1)or(act^.empleado.dep=dep2)then begin//no hay un orden, por eso no uso el de mayor ni menor
+      borre:=true;
+    end
+    else begin //si no encuentro avanzo (hay varias formas de hacerlo)
+      ant:=act;
+      act:=act^.sig;
+    end;
+
+    if(borre)then begin
+      if(act=l)then begin//me fijo si el elemnto estaba primero o si tenía un nodo anterior
+        l:=l^.sig; //puedo poner l:=act^.sig;
+      end
+      else begin
+        ant^.sig:=act^.sig;
+      end;
+      aux:=act^.sig;
+      Dispose(act);//no olvidar; no actualizo ant porque ant ahora es el anterior del nuevo dato
+      act:=aux;{}
+    end;
+  end;
+end; 
+
+
+Procedure InsertarOrdenado ( var pri: lista; per: persona);
+var 
+  ant, nue, act: lista;//los insertar usan punteros para el anterior y siguiente al igual que los borrar (ahora inclluyo nue para el nuevo nodo)
+begin
+  new (nue);
+  nue^.datos := per;
+  act := pri;
+  ant := pri;//le doy un valor porque si el nuevo va al inicio devo poder hacer if ant=act
+  
+  while (act<>NIL) and (act^.datos.nombre < per.nombre) do begin //Recorro mientras no se termine la lista y no encuentro la posición correcta
+    ant := act;
+    act := act^.sig ;
+  end;
+  nue^.sig := act ;//no pasa nada si lo hago último
+  if (ant = act) then begin //si haría if(pri=act) no hace falta declarar a ant:=pri;
+    pri := nue; {el dato va al principio}
+  end
+  else begin
+    ant^.sig := nue; //va entre otros dos o al final
+  end;
+
+end;
+
+
+Procedure InsertarOrdenado2 ( var pri: lista; per: persona);
+var 
+  ant, nue, act: lista;
+begin
+  new (nue);
+  nue^.datos := per;
+  act := pri;
+  ant:=pri;
+  while (act<>NIL) and (act^.datos.nombre < per.nombre) do begin
+    ant := act;
+    act := act^.sig ;
+  end;
+  nue^.sig := act ;// creo q no pasa nada si lo puedo hacer despues
+  if (pri= act) then begin //si haría if(pri=act) no hace falta declarar a ant:=pri;
+    pri := nue; //el dato va al principio
+  end
+  else begin
+    ant^.sig := nue; //va entre otros dos o al final
+  end;
+end;
+
+
+procedure UnirListasOrd-Merge (A,B:lista; var C:lista);
+
+  procedure minimo(var A,B:lista; var min:integer);
+  begin
+    if(A=nil)and(B=nil)then begin //si las listas estan vacias mando la opcion de fin
+      min:=fin;
+    end
+    else begin
+      if(A<>nil)and(B<>nil)then begin //si las 2 estan cargadas
+        if(A^.n<=B^.n)then begin //si el minimo lo apunta A, avanzo en A y guardo el valor
+          min:=A^.n;
+          A:=A^.sig;
+        end
+        else begin //si el minimo lo apunta B, avanzo en B y guardo el valor
+          min:=B^.n;
+          B:=B^.sig;
+        end;
+      end
+      else begin
+        if(B=nil)then begin //si solo a A le quedan datos el minimo siempre es de A (puede ser que antes B tenía algunos y ahora ya llegó al final)
+          min:=A^.n;
+          A:=A^.sig;
+        end
+        else begin //lo mismo pero si solo a B le quedan datos
+          min:=B^.n;
+          B:=B^.sig;
+        end;
+      end;
+    end;
+  end;
+
+var
+  min:integer;
+  ultc:lista;
+begin
+  minimo(A,B,min);//calculo el minimo del valor que apunta A y B, y si elijo el numero de A avanzo en A (lo mismo para B).
+  while(min<>fin)do begin
+    AgregarAtras(C,ultc,min);//uso el agregar atras optiizado
+    minimo(A,B,min);
+  end;
+end;    
+
+
+procedure EliminaryoAvanzar(var l,ant,act,aux:lista; entrego:boolean);  //elimina 1, lo puedo usar dentro de un modulo para eliminar a todos los que cumplan la condicion
+begin //el boolean "entrego" rep´resenta un "borrar?"
+  if(not entrego)then begin //si elimino en cierta forma también estoy avanzando
+    if(act=l)then begin //modifico ME
+      l:=act^.sig;
+    end
+    else begin //o modifico MD
+      ant^.sig:=act^.sig;
+    end;
+    aux:=act^.sig; //ant siguew siendo el mismo
+    dispose(act); 
+    act:=aux;
+  end
+  else begin //avanzo, esta vez modifico ant
+    aux:=aux^.sig;
+    act:=aux;
+    ant:=ant^.sig;
+  end;
+end;
+
+
+procedure EliminarTodos2(var l:lista);//podría recibir el valor a eliminar
+var
+  aux,ant,act:lista;
+  borre:boolean;
+begin
+  act:=l;
+  while(act<>nil)do begin //recorro toda la lista porque busco el dato en toda la lista
+    borre:=False;
+    aux:=act;
+
+    if(act^.alumno.mapro<cmaterias)or(act^.alumno.npro<=cpromedio)then begin
+      borre:=True;//podría poner todas lasacciones acá en vez de mandarlas abajo y me quedaría como el módulo anterior
+    end
+    else begin
+      ant:=act;
+      act:=act^.sig;
+    end;
+
+    if(borre)then begin
+      if(act=l)then begin
+        l:=l^.sig;
+      end
+      else begin
+        ant^.sig:=act^.sig;
+      end;
+      aux:=act^.sig;//en este caso uso aux con el proposito de guardar el siguiente
+      Dispose(act);
+      act:=aux;
+    end;
+
+  end;
+end;   
+
+
+procedure EliminarTodos3(var l:lista; num:integer);
+
+  procedure EliminaryoAvanzar(var l,ant,act,aux:lista; borrar:boolean);  //elimina 1, lo puedo usar dentro de un modulo para eliminar a todos los que cumplan la condicion
+  begin
+    if(borrar)then begin //si elimino en cierta forma también estoy avanzando
+      if(act=l)then begin //modifico ME
+        l:=act^.sig;
+      end
+      else begin //modifico MD
+        ant^.sig:=act^.sig;
+      end;
+      aux:=act^.sig; //ant sigue siendo el mismo
+      dispose(act);
+      act:=aux;
+    end
+    else begin //avanzo, esta vez modifico ant
+      ant:=aux;
+      aux:=aux^.sig;
+      act:=aux;
+
+    end;
+  end;
+
+var
+  ant,act,aux:lista;
+  borrar:boolean;
+begin
+  aux:=l;
+  //no pasa nada si hago ant:=l;
+  act:=l;//no olvidar
+  //como no inicialicé ant, no puedo al avanzar hacer ant:=ant^.sig porque en la primera vez no apunta a nadie
+  while(aux<>nil)do begin
+    borrar:=False;
+    if(aux^.n=num)then
+      borrar:=True;
+    EliminaryoAvanzar(l,ant,act,aux, borrar);
+  end;
+end;  
+            

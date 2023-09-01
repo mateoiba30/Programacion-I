@@ -19,7 +19,3 @@ Este repositorio contiene las prácticas realizadas en la materia **Programació
 - [Practica 10 listas](Practica%2010%20listas/)
 
 - [Practica 11 repaso](Practica%2011%20repaso/)
-
-## Licencia
-
-Este proyecto está bajo la licencia MIT. Consulta el archivo [LICENSE](LICENSE) para más detalles.

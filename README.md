@@ -14,6 +14,6 @@ This repository contains the practices carried out in the subject **Programming 
 
 - [Practice 7 arrays](Practica%207%20arrays/)
 
-- [Practice 10 listas](Practica%2010%20listas/)
+- [Practice 10 lists](Practica%2010%20listas/)
 
-- [Practice 11 review](Practica%2011%20repaso/)
+- [Practice 11 review](Practica%2011%20reapaso/)

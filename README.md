@@ -1,16 +1,14 @@
 # Programación 1
 
-Este repositorio contiene las prácticas realizadas en la materia **Programación 1**.
+This repository contains the practices carried out in the subject **Programming 1**.
 
-## Prácticas
+- [Practice 1 structures](Practica%201%20estructuras/)
 
-- [Practica 1 estructuras](Practica%201%20estructuras/)
+- [Practice 2 numbers and characters](Practica%202%20nros%20y%20caracts/)
 
-- [Practica 2 nros y caracts](Practica%202%20nros%20y%20caracts/)
+- [Practice 3 modules](Practica%203%20modulos/)
 
-- [Practica 3 modulos](Practica%203%20modulos/)
-
-- [Practica 4 types](Practica%204%20types/)
+- [Practice 4 types](Practica%204%20types/)
 
 - [Practica 5 cort d cntrl](Practica%205%20cort%20d%20cntrl/)
 
